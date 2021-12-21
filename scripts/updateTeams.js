@@ -364,4 +364,7 @@ async function requestAll(request, parameters) {
 }
 
 
-main(process.argv[2], process.argv[3]);
+main(process.argv[2], process.argv[3]).catch((e) => {
+  console.error(e);
+  process.exit(-1);
+});
