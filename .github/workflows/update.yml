@@ -1,0 +1,46 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Update
+
+on:
+  push:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache cookies
+        uses: actions/cache@v2
+        with:
+          path: ./cookies
+          key: ${{ runner.os }}-${{ hashFiles('**/*.js') }}
+          restore-keys: |
+            ${{ runner.os }}-
+      
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - name: npm install
+        run: |
+          cd ./scripts
+          npm install
+          cd ..
+      
+      - name: update teams
+        run: |
+          node ./scripts/updateTeams.js "./teams" ${{ secrets.GITHUB_TOKEN }}
+
+      - name: update labels
+        run: |
+          node ./scripts/updateLabels.js "./teams" ${{ secrets.GITHUB_TOKEN }}
+
+      - name: update team boards
+        run: |
+          node ./scripts/updateTeamBoards.js "./teams" "./boards" ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ZENHUB_TOKEN }} ${{ secrets.GITHUB_USERNAME }} ${{ secrets.GITHUB_PASSWORD }}
+          

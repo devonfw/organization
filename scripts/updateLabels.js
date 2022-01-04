@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 
 const labelColor = "010101";
+const defaultRepo = "devonfw/.github";
 var octokit = undefined;
 
 async function main(teamsFolderPath, token) {
@@ -30,6 +31,7 @@ async function main(teamsFolderPath, token) {
         }
       }
     }
+    team.repos.push(defaultRepo);
     teams.push(team);
   });
   console.log(teams);

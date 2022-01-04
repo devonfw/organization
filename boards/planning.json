@@ -1,0 +1,27 @@
+{
+    "pipelines": [
+        {
+            "name": "New Issues",
+            "description": "New Issues that have to be assigned to the teams"
+        },
+        {
+            "name": "Ice box",
+            "description": "Issues that are currently of low priority"
+        },
+        {
+            "name": "<team name>",
+            "description": "Issues of team <team name>",
+            "isTeamPipeline": true,
+            "connections":[
+                {
+                    "board": "<team name>",
+                    "pipeline": "Team Backlog"
+                }
+            ]
+        },
+        {
+            "name": "Review needed",
+            "description": "Issues that need a review"
+        }
+    ]
+}

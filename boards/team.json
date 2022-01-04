@@ -1,0 +1,34 @@
+{
+    "pipelines": [
+        {
+            "name": "Team Backlog",
+            "description": "Backlog of the team"
+        },
+        {
+            "name": "Sprint Backlog",
+            "description": "Issues added to the current sprint"
+        },
+        {
+            "name": "Review Rework",
+            "description": "Issues that have been reviewed and need rework"
+        },
+        {
+            "name": "In Progress",
+            "description": "Issues that are in progress"
+        },
+        {
+            "name": "Team Review",
+            "description": "Issues that need a review by someone from the team"
+        },
+        {
+            "name": "Review",
+            "description": "Issues that need a review by someone NOT from the team",
+            "connections":[
+                {
+                    "board": "Planning",
+                    "pipeline": "Review needed"
+                }
+            ]
+        }
+    ]
+}

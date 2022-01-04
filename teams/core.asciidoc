@@ -1,0 +1,11 @@
+= Core
+
+== Members
+* SchettlerKoehler
+* maybeec
+
+== Repos
+* devonfw
+* devonfw-forge
+* devonfw-sample
+* devonfw-tutorials

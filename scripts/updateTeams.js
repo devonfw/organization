@@ -11,6 +11,16 @@ async function main(teamsFolderPath, token) {
   octokit = new Octokit({
     auth: token,
   });
+  var teams = parse(teamsFolderPath);
+  console.log(teams);
+
+  await removeOldTeams(teams);
+  await createMissingTeams(teams);
+  await ensureMembers(teams);
+  await updateTeamRepos(teams);
+}
+
+function parse(teamsFolderPath) {
   var teams = [];
   var regex = /=+\s*(?<Name>.+)[\r\n]+(?<body>([^=].+[\r\n]+)*)/gm;
   fs.readdirSync(path.resolve(teamsFolderPath)).forEach((file) => {
@@ -34,12 +44,7 @@ async function main(teamsFolderPath, token) {
     }
     teams.push(team);
   });
-  console.log(teams);
-
-  await removeOldTeams(teams);
-  await createMissingTeams(teams);
-  await ensureMembers(teams);
-  await updateTeamRepos(teams);
+  return teams;
 }
 
 async function createMissingTeams(teams) {
