@@ -7,6 +7,11 @@ on:
     branches: [ master ]
 
   workflow_dispatch:
+    inputs:
+      cookies:
+        description: ''     
+        required: false
+        default: ''
 
 jobs:
   build:
@@ -31,6 +36,10 @@ jobs:
           cd ./scripts
           npm install
           cd ..
+      
+      - name: Save cookies
+        run: |
+          node ./scripts/saveCookies.js ${{ github.event.inputs.cookies }}
       
       - name: update teams
         run: |
