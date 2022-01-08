@@ -82,9 +82,7 @@ async function createLabelForTeamInRepo(team, owner, repo) {
       name: getLabelName(team),
     });
     request = "PATCH /repos/{owner}/{repo}/labels/{name}";
-  } catch (e) {
-    console.error(e);
-  }
+  } catch (e) {}
 
   try {
     console.log("Creating/updating label in: " + owner + "/" + repo);
