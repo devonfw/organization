@@ -1,0 +1,8 @@
+= 22_1_CobiGen_Templates
+
+== Members
+* SchettlerKoehler
+* maybeec
+
+== Repos
+* devonfw/cobigen
