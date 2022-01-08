@@ -82,16 +82,22 @@ async function createLabelForTeamInRepo(team, owner, repo) {
       name: getLabelName(team),
     });
     request = "PATCH /repos/{owner}/{repo}/labels/{name}";
-  } catch (e) {}
+  } catch (e) {
+    console.error(e);
+  }
 
-  console.log("Creating/updating label in: " + owner + "/" + repo);
-  await octokit.request(request, {
-    owner: owner,
-    repo: repo,
-    name: getLabelName(team),
-    color: labelColor,
-    description: "These issues will be handeled by the team " + team.name,
-  });
+  try {
+    console.log("Creating/updating label in: " + owner + "/" + repo);
+    await octokit.request(request, {
+      owner: owner,
+      repo: repo,
+      name: getLabelName(team),
+      color: labelColor,
+      description: "These issues will be handeled by the team " + team.name,
+    });
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 async function removeOldLabels(teams) {
