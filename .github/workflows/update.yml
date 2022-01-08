@@ -34,13 +34,13 @@ jobs:
       
       - name: update teams
         run: |
-          node ./scripts/updateTeams.js "./teams" ${{ secrets.GITHUB_TOKEN }}
+          node ./scripts/updateTeams.js "./teams" ${{ secrets.GH_TOKEN }}
 
       - name: update labels
         run: |
-          node ./scripts/updateLabels.js "./teams" ${{ secrets.GITHUB_TOKEN }}
+          node ./scripts/updateLabels.js "./teams" ${{ secrets.GH_TOKEN }}
 
       - name: update team boards
         run: |
-          node ./scripts/updateTeamBoards.js "./teams" "./boards" ${{ secrets.GITHUB_TOKEN }} ${{ secrets.ZENHUB_TOKEN }} ${{ secrets.GITHUB_USERNAME }} ${{ secrets.GITHUB_PASSWORD }}
+          node ./scripts/updateTeamBoards.js "./teams" "./boards" ${{ secrets.GH_TOKEN }} ${{ secrets.ZENHUB_TOKEN }} ${{ secrets.GH_USERNAME }} ${{ secrets.GH_PASSWORD }}
           
