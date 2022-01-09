@@ -818,9 +818,7 @@ async function getToken(username, password, mailUsername, mailPassword) {
       if (mailbody) {
         var regex = /Verification code: ([0-9]+)/g;
         var code = regex.exec(mailbody);
-        await page.waitForSelector(".btn-primary");
-        await page.type("#otp", code[1]);
-        await page.click(".btn-primary");
+        await page.type("#otp", code[1] + String.fromCharCode(13));
         await page.waitForNetworkIdle();
       }
       process.exit(-1);
