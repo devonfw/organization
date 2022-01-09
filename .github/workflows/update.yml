@@ -4,7 +4,7 @@ name: Update
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
   workflow_dispatch:
 
@@ -19,28 +19,27 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/*.js') }}
           restore-keys: |
             ${{ runner.os }}-
-      
+
       - uses: actions/checkout@v2
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: "12"
 
       - name: npm install
         run: |
           cd ./scripts
           npm install
           cd ..
-      
-      # - name: update teams
-      #   run: |
-      #     node ./scripts/updateTeams.js "./teams" ${{ secrets.GH_TOKEN }}
 
-      # - name: update labels
-      #   run: |
-      #     node ./scripts/updateLabels.js "./teams" ${{ secrets.GH_TOKEN }}
+      - name: update teams
+        run: |
+          node ./scripts/updateTeams.js "./teams" ${{ secrets.GH_TOKEN }}
+
+      - name: update labels
+        run: |
+          node ./scripts/updateLabels.js "./teams" ${{ secrets.GH_TOKEN }}
 
       - name: update team boards
         run: |
           node ./scripts/updateTeamBoards.js "./teams" "./boards" ${{ secrets.GH_TOKEN }} ${{ secrets.ZENHUB_TOKEN }} ${{ secrets.GH_USERNAME }} ${{ secrets.GH_PASSWORD }} ${{ secrets.MAIL_USERNAME }} ${{ secrets.MAIL_PASSWORD }}
-          

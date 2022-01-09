@@ -34,8 +34,6 @@ async function main(
   gZenhubToken = zenhubToken;
 
   gZenhubBffToken = await getToken(username, password, mailUser, mailPassword);
-  console.log(gZenhubBffToken);
-  return;
 
   await updateManagedWorkspaces();
 
@@ -810,7 +808,6 @@ async function getToken(username, password, mailUsername, mailPassword) {
       page.mainFrame().url() == "https://github.com/sessions/verified-device"
     ) {
       console.error("github verify device page");
-      console.log(await page.mainFrame().content());
       var mailbody = await getMailBySubject(
         mailUsername,
         mailPassword,
@@ -820,13 +817,10 @@ async function getToken(username, password, mailUsername, mailPassword) {
         var regex = /Verification code: ([0-9]+)/g;
         var code = regex.exec(mailbody);
         await page.type("#otp", code[1]);
-        console.log("Code entered");
         try {
           await (await page.$("#otp")).press("Enter");
-          console.log("Enter pressed");
         } catch (e) {}
         await page.waitForNetworkIdle();
-        console.log("Navigated");
       }
     }
     await goto(page, "https://app.zenhub.com");
