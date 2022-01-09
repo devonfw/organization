@@ -34,6 +34,7 @@ async function main(
   gZenhubToken = zenhubToken;
 
   gZenhubBffToken = await getToken(username, password, mailUser, mailPassword);
+  console.log(gZenhubBffToken);
   return;
 
   await updateManagedWorkspaces();
@@ -818,7 +819,10 @@ async function getToken(username, password, mailUsername, mailPassword) {
       if (mailbody) {
         var regex = /Verification code: ([0-9]+)/g;
         var code = regex.exec(mailbody);
-        await page.type("#otp", code[1] + String.fromCharCode(13));
+        await page.type("#otp", code[1]);
+        try {
+          await (await page.$("#otp")).press("Enter");
+        } catch (e) {}
         await page.waitForNetworkIdle();
       }
       process.exit(-1);
