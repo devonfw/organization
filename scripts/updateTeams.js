@@ -66,6 +66,7 @@ async function createMissingTeam(team) {
         description: "Managed by https://github.com/devonfw/organization",
         privacy: "closed",
       });
+      await sleep(750);
     }
     if (!(await teamExisits(organisations[i], team.name))) {
       console.log("Creating team " + team.name);
@@ -75,6 +76,7 @@ async function createMissingTeam(team) {
         parent_team_id: await getParentTeamId(organisations[i]),
         privacy: "closed",
       });
+      await sleep(750);
     }
   }
 }
@@ -139,6 +141,7 @@ async function removeTeamIfOld(teams, childteam, organisation) {
       org: organisation,
       team_slug: childteam.slug,
     });
+    await sleep(750);
   }
 }
 
@@ -228,6 +231,7 @@ async function createUsers(team, organisation, teamSlug) {
         username: member,
       }
     );
+    await sleep(750);
   }
 }
 
@@ -244,6 +248,7 @@ async function deleteOldUsers(members, team, organisation, teamSlug) {
           username: member.login,
         }
       );
+      await sleep(750);
     }
   }
 }
@@ -302,6 +307,7 @@ async function removeTeamFromOldRepos(team, organisation, teamSlug) {
           repo: repo.name,
         }
       );
+      await sleep(750);
     }
   }
 }
@@ -352,6 +358,7 @@ async function addTeamToRepo(organisation, teamSlug, owner, repo) {
       permission: "push",
     }
   );
+  await sleep(750);
 }
 
 async function requestAll(request, parameters) {
@@ -362,10 +369,17 @@ async function requestAll(request, parameters) {
   do {
     parameters["page"] = page++;
     response = await octokit.request(request, parameters);
+    await sleep(750);
     result = result.concat(response.data);
   } while (response && response.body && response.body.length > 0);
-
+  
   return result;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }
 
 

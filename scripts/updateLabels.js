@@ -81,6 +81,7 @@ async function createLabelForTeamInRepo(team, owner, repo) {
       repo: repo,
       name: getLabelName(team),
     });
+    await sleep(750);
     request = "PATCH /repos/{owner}/{repo}/labels/{name}";
   } catch (e) {}
 
@@ -93,6 +94,7 @@ async function createLabelForTeamInRepo(team, owner, repo) {
       color: labelColor,
       description: "These issues will be handeled by the team " + team.name,
     });
+    await sleep(750);
   } catch (e) {
     console.error(e);
   }
@@ -137,6 +139,7 @@ async function removeOldLabelsFromRepo(teams, owner, repo) {
         repo: repo,
         name: label.name,
       });
+      await sleep(750);
     }
   }
 }
@@ -166,10 +169,17 @@ async function requestAll(request, parameters) {
   do {
     parameters["page"] = page++;
     response = await octokit.request(request, parameters);
+    await sleep(750);
     result = result.concat(response.data);
   } while (response && response.body && response.body.length > 0);
 
   return result;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }
 
 main(process.argv[2], process.argv[3]).catch((e) => {
