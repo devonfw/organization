@@ -24,7 +24,7 @@ async function main(
   zenhubToken,
   username,
   password,
-  mailUser, 
+  mailUser,
   mailPassword
 ) {
   octokit = new Octokit({
@@ -786,7 +786,7 @@ function parse(teamsFolderPath) {
   return teams;
 }
 
-async function getToken(username, password, mailUsername, mailPassword)) {
+async function getToken(username, password, mailUsername, mailPassword) {
   console.log(username);
   var token = undefined;
   const browser = await puppeteer.launch({ headless: false });
@@ -810,8 +810,12 @@ async function getToken(username, password, mailUsername, mailPassword)) {
     ) {
       console.error("github verify device page");
       console.log(await page.mainFrame().content());
-      var mailbody = await getMailBySubject(mailUsername, mailPassword, '[GitHub] Please verify your device');
-      if(mailbody){
+      var mailbody = await getMailBySubject(
+        mailUsername,
+        mailPassword,
+        "[GitHub] Please verify your device"
+      );
+      if (mailbody) {
         var regex = /Verification code: ([0-9]+)/g;
         var code = regex.exec(r);
         console.log(code[1]);
@@ -897,9 +901,9 @@ async function getMailBySubject(mailUser, mailPassword, expectedSubject) {
           .then(function (messages) {
             messages.forEach(function (item) {
               var subject = item.parts.filter(function (part) {
-                  return part.which === "HEADER";
-                })[0].body.subject[0];
-              if(!body && subject == expectedSubject){
+                return part.which === "HEADER";
+              })[0].body.subject[0];
+              if (!body && subject == expectedSubject) {
                 body = item.parts.filter(function (part) {
                   return part.which === "TEXT";
                 })[0].body;
