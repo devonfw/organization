@@ -408,15 +408,17 @@ async function updatePipelinesOfPlanningWorkspace(boardsFolderPath, teams) {
 
 async function addAllReposToPlanningWorkspace() {
   var organisations = await requestAll("GET /user/orgs", {});
+  var repoIds = [];
   for (var i = 0; i < organisations.length; i++) {
     var organisation = organisations[i];
+    console.log("Org: " + organisation.login);
     try {
       var repos = await requestAll("GET /orgs/{org}/repos", {
         org: organisation.login,
       });
-      var repoIds = [];
       for (let i = 0; i < repos.length; i++) {
         const repo = repos[i];
+        console.log("Repo: " + repo.full_name);
         repoIds.push(repo.id);
       }
     } catch (e) {
