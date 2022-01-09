@@ -789,7 +789,7 @@ function parse(teamsFolderPath) {
 async function getToken(username, password, mailUsername, mailPassword) {
   console.log(username);
   var token = undefined;
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
   try {
     if (!fs.existsSync(path.resolve("./cookies"))) {
