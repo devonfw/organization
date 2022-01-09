@@ -7,11 +7,6 @@ on:
     branches: [ master ]
 
   workflow_dispatch:
-    inputs:
-      cookies:
-        description: ''     
-        required: false
-        default: ''
 
 jobs:
   build:
@@ -37,17 +32,13 @@ jobs:
           npm install
           cd ..
       
-      - name: Save cookies
-        run: |
-          node ./scripts/saveCookies.js ${{ github.event.inputs.cookies }}
-      
-      - name: update teams
-        run: |
-          node ./scripts/updateTeams.js "./teams" ${{ secrets.GH_TOKEN }}
+      # - name: update teams
+      #   run: |
+      #     node ./scripts/updateTeams.js "./teams" ${{ secrets.GH_TOKEN }}
 
-      - name: update labels
-        run: |
-          node ./scripts/updateLabels.js "./teams" ${{ secrets.GH_TOKEN }}
+      # - name: update labels
+      #   run: |
+      #     node ./scripts/updateLabels.js "./teams" ${{ secrets.GH_TOKEN }}
 
       - name: update team boards
         run: |

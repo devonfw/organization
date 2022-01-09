@@ -794,6 +794,7 @@ async function getToken(username, password) {
       page.mainFrame().url() == "https://github.com/sessions/verified-device"
     ) {
       console.error("github verify device page");
+      console.log(await page.mainFrame().content());
       process.exit(-1);
     }
     await goto(page, "https://app.zenhub.com");
