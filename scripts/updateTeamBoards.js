@@ -820,12 +820,14 @@ async function getToken(username, password, mailUsername, mailPassword) {
         var regex = /Verification code: ([0-9]+)/g;
         var code = regex.exec(mailbody);
         await page.type("#otp", code[1]);
+        console.log("Code entered");
         try {
           await (await page.$("#otp")).press("Enter");
+          console.log("Enter pressed");
         } catch (e) {}
         await page.waitForNetworkIdle();
+        console.log("Navigated");
       }
-      process.exit(-1);
     }
     await goto(page, "https://app.zenhub.com");
     await page.waitForNetworkIdle();
