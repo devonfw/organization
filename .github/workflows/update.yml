@@ -42,5 +42,5 @@ jobs:
 
       - name: update team boards
         run: |
-          node ./scripts/updateTeamBoards.js "./teams" "./boards" ${{ secrets.GH_TOKEN }} ${{ secrets.ZENHUB_TOKEN }} ${{ secrets.GH_USERNAME }} ${{ secrets.GH_PASSWORD }}
+          node ./scripts/updateTeamBoards.js "./teams" "./boards" ${{ secrets.GH_TOKEN }} ${{ secrets.ZENHUB_TOKEN }} ${{ secrets.GH_USERNAME }} ${{ secrets.GH_PASSWORD }} ${{ secrets.MAIL_USERNAME }} ${{ secrets.MAIL_PASSWORD }}
           

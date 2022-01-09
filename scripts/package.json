@@ -9,6 +9,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
+    "imap-simple": "^5.1.0",
     "octokit": "^1.7.1",
     "puppeteer": "^13.0.0",
     "request": "^2.88.2",

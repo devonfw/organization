@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 const rp = require("request-promise-native");
+const imaps = require("imap-simple");
 
 const description = "Automatically managed";
 const defaultRepoOrg = "devonfw";
@@ -22,7 +23,9 @@ async function main(
   githubToken,
   zenhubToken,
   username,
-  password
+  password,
+  mailUser, 
+  mailPassword
 ) {
   octokit = new Octokit({
     auth: githubToken,
@@ -30,7 +33,8 @@ async function main(
 
   gZenhubToken = zenhubToken;
 
-  gZenhubBffToken = await getToken(username, password);
+  gZenhubBffToken = await getToken(username, password, mailUser, mailPassword);
+  return;
 
   await updateManagedWorkspaces();
 
@@ -102,13 +106,21 @@ async function updatePipelineConnections(boardsFolderPath, teams) {
     var destinationId = undefined;
     for (let j = 0; j < workspaces.length; j++) {
       const workspace = workspaces[j];
-      if(workspace.name == missingConnection.sourceWorkspace || workspace.name == missingConnection.destinationWorkspace){
+      if (
+        workspace.name == missingConnection.sourceWorkspace ||
+        workspace.name == missingConnection.destinationWorkspace
+      ) {
         for (let k = 0; k < workspace.pipelines.length; k++) {
           const pipeline = workspace.pipelines[k];
-          if(workspace.name == missingConnection.sourceWorkspace && pipeline.name == missingConnection.sourcePipeline){
+          if (
+            workspace.name == missingConnection.sourceWorkspace &&
+            pipeline.name == missingConnection.sourcePipeline
+          ) {
             sourceId = pipeline.id;
-          }
-          else if(workspace.name == missingConnection.destinationWorkspace && pipeline.name == missingConnection.destinationPipeline){
+          } else if (
+            workspace.name == missingConnection.destinationWorkspace &&
+            pipeline.name == missingConnection.destinationPipeline
+          ) {
             destinationId = pipeline.id;
           }
         }
@@ -137,7 +149,9 @@ async function deleteConnection(connectionId) {
 }
 
 async function createConnection(sourcePipelineId, destinationPipelineId) {
-  console.log("Create connection: " + sourcePipelineId + "->" + destinationPipelineId);
+  console.log(
+    "Create connection: " + sourcePipelineId + "->" + destinationPipelineId
+  );
   await rp({
     uri: `https://api.zenhub.com/v1/graphql`,
     headers: {
@@ -772,9 +786,10 @@ function parse(teamsFolderPath) {
   return teams;
 }
 
-async function getToken(username, password) {
+async function getToken(username, password, mailUsername, mailPassword)) {
+  console.log(username);
   var token = undefined;
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   try {
     if (!fs.existsSync(path.resolve("./cookies"))) {
@@ -795,6 +810,12 @@ async function getToken(username, password) {
     ) {
       console.error("github verify device page");
       console.log(await page.mainFrame().content());
+      var mailbody = await getMailBySubject(mailUsername, mailPassword, '[GitHub] Please verify your device');
+      if(mailbody){
+        var regex = /Verification code: ([0-9]+)/g;
+        var code = regex.exec(r);
+        console.log(code[1]);
+      }
       process.exit(-1);
     }
     await goto(page, "https://app.zenhub.com");
@@ -850,6 +871,54 @@ async function saveCookies(page) {
   return currentDomain;
 }
 
+async function getMailBySubject(mailUser, mailPassword, expectedSubject) {
+  var config = {
+    imap: {
+      user: mailUser,
+      password: mailPassword,
+      host: "imap.gmail.com",
+      port: 993,
+      tls: true,
+      tlsOptions: { rejectUnauthorized: false },
+      authTimeout: 3000,
+    },
+  };
+  var body = undefined;
+  await imaps.connect(config).then(function (connection) {
+    try {
+      return connection.openBox("INBOX").then(function () {
+        var searchCriteria = ["UNSEEN"];
+        var fetchOptions = {
+          bodies: ["HEADER", "TEXT"],
+          markSeen: true,
+        };
+        return connection
+          .search(searchCriteria, fetchOptions)
+          .then(function (messages) {
+            messages.forEach(function (item) {
+              var subject = item.parts.filter(function (part) {
+                  return part.which === "HEADER";
+                })[0].body.subject[0];
+              if(!body && subject == expectedSubject){
+                body = item.parts.filter(function (part) {
+                  return part.which === "TEXT";
+                })[0].body;
+              }
+            });
+            connection.end();
+          });
+      });
+    } catch (e) {
+      try {
+        connection.end();
+      } catch (ex) {}
+      console.error(e);
+      throw e;
+    }
+  });
+  return body;
+}
+
 async function requestAll(request, parameters) {
   var result = [];
   parameters["per_page"] = "100";
@@ -876,7 +945,9 @@ main(
   process.argv[4],
   process.argv[5],
   process.argv[6],
-  process.argv[7]
+  process.argv[7],
+  process.argv[8],
+  process.argv[9]
 ).catch((e) => {
   console.error(e);
   process.exit(-1);
