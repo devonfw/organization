@@ -1,7 +1,9 @@
 = IDE
 
 == Members
-
+* cinnamon-coder-hub
+* tobka777
+* nikiOstrov 
 
 == Repos
 * devonfw/ide
