@@ -1,8 +1,8 @@
-= 22_1_IDE
+= Monitoring
 
 == Members
 * SchettlerKoehler
 * maybeec
 
 == Repos
-* devonfw/ide
+

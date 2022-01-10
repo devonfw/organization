@@ -1,8 +1,0 @@
-= 22_1_Monitoring
-
-== Members
-* SchettlerKoehler
-* maybeec
-
-== Repos
-
