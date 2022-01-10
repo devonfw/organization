@@ -3,6 +3,7 @@
 == Members
 * maybeec
 * LarsReinken
+* jan-vcapgemini
 
 == Repos
 * devonfw/cobigen
