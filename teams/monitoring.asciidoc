@@ -3,6 +3,7 @@
 == Members
 * SchettlerKoehler
 * maybeec
+* EduardKrieger
 
 == Repos
 
