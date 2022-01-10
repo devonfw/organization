@@ -1,7 +1,6 @@
 = CobiGen_Templates
 
 == Members
-* SchettlerKoehler
 * maybeec
 
 == Repos
