@@ -2,6 +2,7 @@
 
 == Members
 * maybeec
+* LarsReinken
 
 == Repos
 * devonfw/cobigen
