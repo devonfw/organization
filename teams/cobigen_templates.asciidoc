@@ -4,6 +4,8 @@
 * maybeec
 * LarsReinken
 * jan-vcapgemini
+* MikeSchumacherCapgemini
+* GuentherJulian
 
 == Repos
 * devonfw/cobigen
