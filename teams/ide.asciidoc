@@ -1,8 +1,7 @@
 = IDE
 
 == Members
-* SchettlerKoehler
-* maybeec
+
 
 == Repos
 * devonfw/ide

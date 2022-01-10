@@ -1,7 +1,6 @@
 = CobiGen_Templates
 
 == Members
-* maybeec
 * LarsReinken
 * jan-vcapgemini
 * MikeSchumacherCapgemini

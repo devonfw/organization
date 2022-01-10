@@ -1,8 +1,6 @@
 = Monitoring
 
 == Members
-* SchettlerKoehler
-* maybeec
 * EduardKrieger
 
 == Repos
