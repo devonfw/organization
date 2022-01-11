@@ -1,8 +1,6 @@
 = Core
 
 == Members
-* SchettlerKoehler
-* maybeec
 
 == Repos
 * devonfw

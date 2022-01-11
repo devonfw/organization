@@ -1,8 +1,10 @@
 = CobiGen_Templates
 
 == Members
-* SchettlerKoehler
-* maybeec
+* LarsReinken
+* jan-vcapgemini
+* MikeSchumacherCapgemini
+* GuentherJulian
 
 == Repos
 * devonfw/cobigen

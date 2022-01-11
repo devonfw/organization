@@ -1,8 +1,10 @@
 = IDE
 
 == Members
-* SchettlerKoehler
-* maybeec
+* cinnamon-coder-hub
+* tobka777
+* nikiOstrov 
+* creitz25
 
 == Repos
 * devonfw/ide

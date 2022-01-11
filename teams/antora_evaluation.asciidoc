@@ -1,8 +1,11 @@
 = Antora_Evaluation
 
 == Members
-* SchettlerKoehler
-* maybeec
+* mustafaokyay 
+* MarvDan 
+* rafaelvicariabarker 
+* HKayed 
+
 
 == Repos
 * devonfw-forge/antora-docs-evaluation

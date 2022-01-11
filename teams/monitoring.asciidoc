@@ -1,8 +1,10 @@
 = Monitoring
 
 == Members
-* SchettlerKoehler
-* maybeec
+* EduardKrieger
+* denise-khuu 
+* entgl-t
+* TugbaDalmaz 
 
 == Repos
 
