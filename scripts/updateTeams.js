@@ -107,6 +107,7 @@ function getOrganisationsFromTeam(team) {
 async function removeOldTeams(teams) {
   console.log("Removing old teams");
   var organisations = await requestAll("GET /user/orgs", {});
+  console.log("organisations", organisations);
   for (var i = 0; i < organisations.length; i++) {
     var childteams = getChildTeams(organisations[i].login);
     removeTeamsIfOld(teams, childteams, organisations[i].login);
@@ -187,6 +188,7 @@ async function getParentTeamId(organisation) {
 
 function teamHasToBeDeleted(teams, childteam) {
   for (var i = 0; i < teams.length; i++) {
+    console.log("teamHasToBeDeleted: " + teams[i].name + " == " + childteam.name + " -> " + (teams[i].name == childteam.name));
     if (teams[i].name == childteam.name) {
       return false;
     }
