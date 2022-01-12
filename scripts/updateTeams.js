@@ -107,7 +107,6 @@ function getOrganisationsFromTeam(team) {
 async function removeOldTeams(teams) {
   console.log("Removing old teams");
   var organisations = await requestAll("GET /user/orgs", {});
-  console.log("organisations", organisations);
   for (var i = 0; i < organisations.length; i++) {
     var childteams = await getChildTeams(organisations[i].login);
     await removeTeamsIfOld(teams, childteams, organisations[i].login);
@@ -116,7 +115,6 @@ async function removeOldTeams(teams) {
 
 async function getChildTeams(organisation) {
   var parentTeamSlug = await getParentTeamSlug(organisation);
-  console.log("parentTeamSlug: " + parentTeamSlug);
   if (parentTeamSlug) {
     var childteams = await requestAll(
       "GET /orgs/{org}/teams/{team_slug}/teams",
@@ -125,7 +123,6 @@ async function getChildTeams(organisation) {
         team_slug: parentTeamSlug,
       }
     );
-    console.log("childteams", childteams);
     return childteams;
   }
   return [];
@@ -133,7 +130,7 @@ async function getChildTeams(organisation) {
 
 async function removeTeamsIfOld(teams, childteams, organisation) {
   for (var i = 0; i < childteams.length; i++) {
-    removeTeamIfOld(teams, childteams[i], organisation);
+    await removeTeamIfOld(teams, childteams[i], organisation);
   }
 }
 
@@ -149,17 +146,13 @@ async function removeTeamIfOld(teams, childteam, organisation) {
 }
 
 async function getParentTeamSlug(organisation) {
-  console.log("parentTeams", parentTeams);
   if (parentTeams[organisation]) {
-    console.log("return cache: " + organisation, parentTeams[organisation]);
     return parentTeams[organisation].slug;
   }
   try {
-    console.log("organisation: " + organisation);
     var githubteams = await requestAll("GET /orgs/{org}/teams", {
       org: organisation,
     });
-    console.log("githubteams", githubteams);
     for (var i = 0; i < githubteams.length; i++) {
       if (githubteams[i].name == parentTeamName) {
         parentTeams[organisation] = githubteams[i];
@@ -194,7 +187,6 @@ async function getParentTeamId(organisation) {
 
 function teamHasToBeDeleted(teams, childteam) {
   for (var i = 0; i < teams.length; i++) {
-    console.log("teamHasToBeDeleted: " + teams[i].name + " == " + childteam.name + " -> " + (teams[i].name == childteam.name));
     if (teams[i].name == childteam.name) {
       return false;
     }
