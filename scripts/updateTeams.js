@@ -116,6 +116,7 @@ async function removeOldTeams(teams) {
 
 async function getChildTeams(organisation) {
   var parentTeamSlug = await getParentTeamSlug(organisation);
+  console.log("parentTeamSlug: " + parentTeamSlug);
   if (parentTeamSlug) {
     var childteams = await requestAll(
       "GET /orgs/{org}/teams/{team_slug}/teams",
@@ -124,6 +125,7 @@ async function getChildTeams(organisation) {
         team_slug: parentTeamSlug,
       }
     );
+    console.log("childteams", childteams);
     return childteams;
   }
   return [];
@@ -147,6 +149,7 @@ async function removeTeamIfOld(teams, childteam, organisation) {
 }
 
 async function getParentTeamSlug(organisation) {
+  console.log("parentTeams", parentTeams);
   if (parentTeams[organisation]) {
     return parentTeams[organisation].slug;
   }
@@ -154,6 +157,7 @@ async function getParentTeamSlug(organisation) {
     var githubteams = await requestAll("GET /orgs/{org}/teams", {
       org: organisation,
     });
+    console.log("githubteams", githubteams);
     for (var i = 0; i < githubteams.length; i++) {
       if (githubteams[i].name == parentTeamName) {
         parentTeams[organisation] = githubteams[i];
