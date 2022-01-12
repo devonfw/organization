@@ -109,8 +109,8 @@ async function removeOldTeams(teams) {
   var organisations = await requestAll("GET /user/orgs", {});
   console.log("organisations", organisations);
   for (var i = 0; i < organisations.length; i++) {
-    var childteams = getChildTeams(organisations[i].login);
-    removeTeamsIfOld(teams, childteams, organisations[i].login);
+    var childteams = await getChildTeams(organisations[i].login);
+    await removeTeamsIfOld(teams, childteams, organisations[i].login);
   }
 }
 
