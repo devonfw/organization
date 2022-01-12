@@ -151,9 +151,11 @@ async function removeTeamIfOld(teams, childteam, organisation) {
 async function getParentTeamSlug(organisation) {
   console.log("parentTeams", parentTeams);
   if (parentTeams[organisation]) {
+    console.log("return cache: " + organisation, parentTeams[organisation]);
     return parentTeams[organisation].slug;
   }
   try {
+    console.log("organisation: " + organisation);
     var githubteams = await requestAll("GET /orgs/{org}/teams", {
       org: organisation,
     });
