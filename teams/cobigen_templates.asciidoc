@@ -5,6 +5,7 @@
 * jan-vcapgemini
 * MikeSchumacherCapgemini
 * GuentherJulian
+* mdukhan 
 
 == Repos
 * devonfw/cobigen
