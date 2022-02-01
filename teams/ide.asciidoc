@@ -5,6 +5,7 @@
 * tobka777
 * nikiOstrov 
 * creitz25
+* Bene90
 
 == Repos
 * devonfw/ide
