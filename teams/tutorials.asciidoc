@@ -1,6 +1,13 @@
 = Tutorials
 
 == Members
+* Xaure
+* migueltorres0910
+* SebasCosH
+* rvirod 
+* salfuve
+* mtorresf
+
 
 == Repos
 * devonfw-tutorials/tutorials
