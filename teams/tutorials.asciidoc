@@ -3,8 +3,8 @@
 == Members
 
 == Repos
-* tutorials
-* wiki-tutorials
+* devonfw-tutorials/tutorials
+* devonfw-tutorials/wiki-tutorials
 
 
 
