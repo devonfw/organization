@@ -7,13 +7,12 @@
 * rvirod 
 * salfuve
 * mtorresf
-* denise-khuu 
 * MarvDan 
 * nikiOstrov 
-* EduardKrieger
 * GuentherJulian
-* mustafaokyay  
-
+* EduardKrieger
+* mustafaokyay
+* denise-khuu
 
 == Repos
 * devonfw-tutorials/tutorials
