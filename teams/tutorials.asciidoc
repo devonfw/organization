@@ -18,6 +18,7 @@
 == Repos
 * devonfw-tutorials/tutorials
 * devonfw-tutorials/wiki-tutorials
+* devonfw-tutorials/tutorial-compiler
 
 
 
