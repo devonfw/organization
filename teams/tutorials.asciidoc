@@ -6,15 +6,18 @@
 * SebasCosH
 * rvirod 
 * salfuve
+* mtorresf
+* MarvDan 
+* nikiOstrov 
 * GuentherJulian
 * EduardKrieger
 * mustafaokyay
 * denise-khuu
 
-
 == Repos
 * devonfw-tutorials/tutorials
 * devonfw-tutorials/wiki-tutorials
+* devonfw-tutorials/tutorial-compiler
 
 
 
