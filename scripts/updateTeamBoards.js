@@ -833,7 +833,12 @@ async function getToken(username, password, mailUsername, mailPassword) {
       console.log("Zenhub login page");
       await page.waitForSelector(".zhc-button--color-primary");
       await (await page.$(".zhc-button--color-primary")).click();
-      await page.waitForSelector(".zhc-sidebar__navigation h1");
+      try{
+        await page.waitForSelector(".zhc-sidebar__navigation h1", {timeout: 60000});
+      }
+      catch(e){
+        console.error(e);
+      }
     } else {
       console.error("Zenhub login page expected");
     }
