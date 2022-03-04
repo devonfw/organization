@@ -108,8 +108,8 @@ async function removeOldTeams(teams) {
   console.log("Removing old teams");
   var organisations = await requestAll("GET /user/orgs", {});
   for (var i = 0; i < organisations.length; i++) {
-    var childteams = getChildTeams(organisations[i].login);
-    removeTeamsIfOld(teams, childteams, organisations[i].login);
+    var childteams = await getChildTeams(organisations[i].login);
+    await removeTeamsIfOld(teams, childteams, organisations[i].login);
   }
 }
 
@@ -130,7 +130,7 @@ async function getChildTeams(organisation) {
 
 async function removeTeamsIfOld(teams, childteams, organisation) {
   for (var i = 0; i < childteams.length; i++) {
-    removeTeamIfOld(teams, childteams[i], organisation);
+    await removeTeamIfOld(teams, childteams[i], organisation);
   }
 }
 
