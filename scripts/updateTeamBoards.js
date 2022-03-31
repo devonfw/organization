@@ -1,10 +1,9 @@
 const { Octokit } = require("octokit");
-const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
-const url = require("url");
 const rp = require("request-promise-native");
-const imaps = require("imap-simple");
+
+const ZenhubInofficialApiTokenCreator = require('./zenhubInofficialAPITokenCreator');
 
 const description = "Automatically managed";
 const defaultRepoOrg = "devonfw";
@@ -32,8 +31,10 @@ async function main(
   });
 
   gZenhubToken = zenhubToken;
+  
+  const zenhubTokenCreator = new ZenhubInofficialApiTokenCreator();
 
-  gZenhubBffToken = await getToken(username, password, mailUser, mailPassword);
+  gZenhubBffToken = await zenhubTokenCreator.getToken(username, password, mailUser, mailPassword);
 
   await updateManagedWorkspaces();
 
@@ -785,150 +786,6 @@ function parse(teamsFolderPath) {
     teams.push(team);
   });
   return teams;
-}
-
-async function getToken(username, password, mailUsername, mailPassword) {
-  console.log(username);
-  var token = undefined;
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  try {
-    if (!fs.existsSync(path.resolve("./cookies"))) {
-      fs.mkdirSync(path.resolve("./cookies"));
-    }
-
-    await goto(page, "https://github.com/login");
-    await page.waitForNetworkIdle();
-    if (page.mainFrame().url() == "https://github.com/login") {
-      await page.type("#login_field", username);
-      await page.type("#password", password);
-      await page.click('[name="commit"]');
-      await page.waitForNetworkIdle();
-    }
-
-    if (
-      page.mainFrame().url() == "https://github.com/sessions/verified-device"
-    ) {
-      console.error("github verify device page");
-      var mailbody = await getMailBySubject(
-        mailUsername,
-        mailPassword,
-        "[GitHub] Please verify your device"
-      );
-      if (mailbody) {
-        var regex = /Verification code: ([0-9]+)/g;
-        var code = regex.exec(mailbody);
-        await page.type("#otp", code[1]);
-        try {
-          await (await page.$("#otp")).press("Enter");
-        } catch (e) {}
-        await page.waitForNetworkIdle();
-      }
-    }
-    await goto(page, "https://app.zenhub.com");
-    await page.waitForNetworkIdle();
-    await saveCookies(page);
-
-    if (page.mainFrame().url() == "https://app.zenhub.com/login") {
-      console.log("Zenhub login page");
-      await page.waitForSelector(".zhc-button--color-primary");
-      await (await page.$(".zhc-button--color-primary")).click();
-      try{
-        await page.waitForSelector(".zhc-sidebar__navigation h1", {timeout: 60000});
-      }
-      catch(e){
-        console.error(e);
-      }
-    } else {
-      console.error("Zenhub login page expected");
-    }
-
-    const localStorage = await page.evaluate(() =>
-      Object.assign({}, window.localStorage)
-    );
-    token = localStorage.api_token;
-  } catch (e) {
-    console.error(e);
-  }
-
-  await browser.close();
-  return token;
-}
-
-async function goto(page, targetUrl) {
-  var currentDomain = await saveCookies(page);
-
-  var domain = url.parse(targetUrl).hostname;
-  if (
-    domain != currentDomain &&
-    fs.existsSync(path.resolve("./cookies/" + domain + ".json"))
-  ) {
-    const cookiesString = fs.readFileSync(
-      path.resolve("./cookies/" + domain + ".json")
-    );
-    const cookies = JSON.parse(cookiesString);
-    await page.setCookie(...cookies);
-  }
-
-  await page.goto(targetUrl);
-}
-
-async function saveCookies(page) {
-  var currentDomain = url.parse(page.mainFrame().url()).hostname;
-  const currentCookies = await page.cookies();
-  fs.writeFileSync(
-    path.resolve("./cookies/" + currentDomain + ".json"),
-    JSON.stringify(currentCookies, null, 2)
-  );
-  return currentDomain;
-}
-
-async function getMailBySubject(mailUser, mailPassword, expectedSubject) {
-  var config = {
-    imap: {
-      user: mailUser,
-      password: mailPassword,
-      host: "imap.gmail.com",
-      port: 993,
-      tls: true,
-      tlsOptions: { rejectUnauthorized: false },
-      authTimeout: 3000,
-    },
-  };
-  var body = undefined;
-  await imaps.connect(config).then(function (connection) {
-    try {
-      return connection.openBox("INBOX").then(function () {
-        var searchCriteria = ["UNSEEN"];
-        var fetchOptions = {
-          bodies: ["HEADER", "TEXT"],
-          markSeen: true,
-        };
-        return connection
-          .search(searchCriteria, fetchOptions)
-          .then(function (messages) {
-            messages.forEach(function (item) {
-              var subject = item.parts.filter(function (part) {
-                return part.which === "HEADER";
-              })[0].body.subject[0];
-              if (!body && subject == expectedSubject) {
-                body = item.parts.filter(function (part) {
-                  return part.which === "TEXT";
-                })[0].body;
-              }
-            });
-            connection.end();
-          });
-      });
-    } catch (e) {
-      try {
-        connection.end();
-      } catch (ex) {}
-      console.error(e);
-      throw e;
-    }
-  });
-  return body;
 }
 
 async function requestAll(request, parameters) {
