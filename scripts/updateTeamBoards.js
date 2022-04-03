@@ -10,11 +10,11 @@ const defaultRepoOrg = "devonfw";
 const defaultRepoName = ".github";
 const planningWorkspaceName = "Planning";
 
-var octokit = undefined;
-var gZenhubBffToken = undefined;
-var gZenhubToken = undefined;
-var repoCache = {};
-var managedWorkspaces = {};
+let octokit = undefined;
+let gZenhubBffToken = undefined;
+let gZenhubToken = undefined;
+const repoCache = {};
+let managedWorkspaces = {};
 
 async function main(
   teamsFolderPath,
@@ -24,17 +24,22 @@ async function main(
   username,
   password,
   mailUser,
-  mailPassword
+  mailPassword,
 ) {
   octokit = new Octokit({
     auth: githubToken,
   });
 
   gZenhubToken = zenhubToken;
-  
+
   const zenhubTokenCreator = new ZenhubInofficialApiTokenCreator();
 
-  gZenhubBffToken = await zenhubTokenCreator.getToken(username, password, mailUser, mailPassword);
+  gZenhubBffToken = await zenhubTokenCreator.getToken(
+      username,
+      password,
+      mailUser,
+      mailPassword
+  );
 
   await updateManagedWorkspaces();
 
@@ -45,7 +50,7 @@ async function main(
   await updateManagedWorkspaces();
   await addAllReposToPlanningWorkspace();
 
-  var teams = parse(teamsFolderPath);
+  const teams = parse(teamsFolderPath);
   await createTeamWorkspaces(teams);
 
   await deleteOldWorkspaces(teams);
@@ -60,27 +65,27 @@ async function main(
 }
 
 async function updatePipelineConnections(boardsFolderPath, teams) {
-  var { related, workspaces } = await getConnections();
+  const {related, workspaces} = await getConnections();
 
-  var resolvedConnections = resolveConnections(related, workspaces);
-  var missingConnections = [];
+  const resolvedConnections = resolveConnections(related, workspaces);
+  let missingConnections = [];
 
-  var planningPipelineDefinitions = loadPipelineDefinition(
-    boardsFolderPath,
-    "planning"
+  const planningPipelineDefinitions = loadPipelineDefinition(
+      boardsFolderPath,
+      "planning"
   );
   missingConnections = missingConnections.concat(
     ensureConnections(
       resolvedConnections,
       planningPipelineDefinitions,
       teams,
-      planningWorkspaceName
-    )
+      planningWorkspaceName,
+    ),
   );
 
-  var teamPipelineDefinitions = loadPipelineDefinition(
-    boardsFolderPath,
-    "team"
+  const teamPipelineDefinitions = loadPipelineDefinition(
+      boardsFolderPath,
+      'team'
   );
   for (let i = 0; i < teams.length; i++) {
     const team = teams[i];
@@ -90,7 +95,7 @@ async function updatePipelineConnections(boardsFolderPath, teams) {
         teamPipelineDefinitions,
         teams,
         team.name
-      )
+      ),
     );
   }
   for (let i = 0; i < resolvedConnections.length; i++) {
@@ -102,8 +107,8 @@ async function updatePipelineConnections(boardsFolderPath, teams) {
 
   for (let i = 0; i < missingConnections.length; i++) {
     const missingConnection = missingConnections[i];
-    var sourceId = undefined;
-    var destinationId = undefined;
+    let sourceId = undefined;
+    let destinationId = undefined;
     for (let j = 0; j < workspaces.length; j++) {
       const workspace = workspaces[j];
       if (
@@ -176,13 +181,13 @@ function loadPipelineDefinition(boardsFolderPath, filename) {
       path.join(path.resolve(boardsFolderPath), filename + ".json"),
       {
         encoding: "utf-8",
-      }
-    )
+      },
+      )
   );
 }
 
 function ensureConnections(connections, pipelineDefinitions, teams, name) {
-  var missingConnections = [];
+  let missingConnections = [];
   for (let i = 0; i < pipelineDefinitions.pipelines.length; i++) {
     const pipeline = pipelineDefinitions.pipelines[i];
     if (pipeline.connections) {
@@ -205,15 +210,15 @@ function ensureConnections(connections, pipelineDefinitions, teams, name) {
 }
 
 function ensureConnection(connections, pipeline, name, replacement) {
-  var missingConnections = [];
+  const missingConnections = [];
   for (let j = 0; j < pipeline.connections.length; j++) {
     const connection = pipeline.connections[j];
-    var foundConnection = findConnection(
-      connections,
-      name,
-      pipeline.name.replace("<team name>", replacement),
-      connection.board.replace("<team name>", replacement),
-      connection.pipeline
+    const foundConnection = findConnection(
+        connections,
+        name,
+        pipeline.name.replace('<team name>', replacement),
+        connection.board.replace('<team name>', replacement),
+        connection.pipeline,
     );
     if (foundConnection) {
       foundConnection.found = true;
@@ -223,7 +228,7 @@ function ensureConnection(connections, pipeline, name, replacement) {
         sourcePipeline: pipeline.name.replace("<team name>", replacement),
         destinationWorkspace: connection.board.replace(
           "<team name>",
-          replacement
+          replacement,
         ),
         destinationPipeline: connection.pipeline,
       });
@@ -237,7 +242,7 @@ function findConnection(
   sourceWorkspace,
   sourcePipeline,
   destinationWorkspace,
-  destinationPipeline
+  destinationPipeline,
 ) {
   for (let i = 0; i < connections.length; i++) {
     const connection = connections[i];
@@ -254,15 +259,15 @@ function findConnection(
 }
 
 async function getConnections() {
-  var planningWorkspaceId = managedWorkspaces[planningWorkspaceName].id;
-  var related = await getRelated(planningWorkspaceId);
-  var workspaces = [related];
+  const planningWorkspaceId = managedWorkspaces[planningWorkspaceName].id;
+  const related = await getRelated(planningWorkspaceId);
+  let workspaces = [related];
   workspaces = workspaces.concat(related.relatedWorkspaces.nodes);
   return { related, workspaces };
 }
 
 function resolveConnections(related, workspaces) {
-  var resolvedConnections = [];
+  const resolvedConnections = [];
   for (let i = 0; i < related.pipelineToPipelineAutomations.nodes.length; i++) {
     const connection = related.pipelineToPipelineAutomations.nodes[i];
     resolvedConnections.push(resolveConnection(workspaces, connection));
@@ -271,7 +276,7 @@ function resolveConnections(related, workspaces) {
 }
 
 function resolveConnection(workspaces, connection) {
-  var result = {
+  const result = {
     sourceWorkspace: undefined,
     sourcePipeline: undefined,
     sourcePipelineId: undefined,
@@ -306,20 +311,20 @@ function resolveConnection(workspaces, connection) {
 }
 
 async function getRelated(workspaceId) {
-  var response = JSON.parse(
-    await rp({
-      uri: `https://api.zenhub.com/v1/graphql?query=[getRelated]`,
-      headers: {
-        "x-authentication-token": gZenhubBffToken,
-        "x-zenhub-agent": "webapp/3.3.19",
-        "content-type": "application/json",
-      },
-      method: "POST",
-      body:
+  const response = JSON.parse(
+      await rp({
+        uri: `https://api.zenhub.com/v1/graphql?query=[getRelated]`,
+        headers: {
+          'x-authentication-token': gZenhubBffToken,
+          "x-zenhub-agent": 'webapp/3.3.19',
+          "content-type": 'application/json',
+        },
+        method: 'POST',
+        body:
         '[{"operationName":"getRelated","variables":{"workspaceId":"' +
         workspaceId +
         '"},"query":"query getRelated($workspaceId: ID!) {\\n  workspace(id: $workspaceId) {\\n    id\\n    name\\n    description\\n    viewerPermission\\n    pipelines {\\n      id\\n      name\\n      __typename\\n    }\\n    relatedWorkspaces {\\n      nodes {\\n        id\\n        name\\n        description\\n        viewerPermission\\n        pipelines {\\n          id\\n          name\\n          __typename\\n        }\\n        pipelineToPipelineAutomations {\\n          nodes {\\n            id\\n            sourcePipeline {\\n              id\\n              __typename\\n            }\\n            destinationPipeline {\\n              id\\n              __typename\\n            }\\n            __typename\\n          }\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    pipelineToPipelineAutomations {\\n      nodes {\\n        id\\n        sourcePipeline {\\n          id\\n          __typename\\n        }\\n        destinationPipeline {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n"}]',
-    })
+      }),
   );
   await sleep(5000 * Math.random());
   return response[0].data.workspace;
@@ -378,12 +383,12 @@ async function createTeamWorkspaces(teams) {
 }
 
 async function updatePipelinesOfPlanningWorkspace(boardsFolderPath, teams) {
-  var pipelineDefinitions = loadPipelineDefinition(
-    boardsFolderPath,
-    "planning"
+  const pipelineDefinitions = loadPipelineDefinition(
+      boardsFolderPath,
+      'planning'
   );
 
-  var pipelines = [];
+  const pipelines = [];
   for (let i = 0; i < pipelineDefinitions.pipelines.length; i++) {
     const pipeline = pipelineDefinitions.pipelines[i];
     if (pipeline.isTeamPipeline) {
@@ -408,13 +413,13 @@ async function updatePipelinesOfPlanningWorkspace(boardsFolderPath, teams) {
 }
 
 async function addAllReposToPlanningWorkspace() {
-  var organisations = await requestAll("GET /user/orgs", {});
-  var repoIds = [];
-  for (var i = 0; i < organisations.length; i++) {
-    var organisation = organisations[i];
+  const organisations = await requestAll('GET /user/orgs', {});
+  const repoIds = [];
+  for (let i = 0; i < organisations.length; i++) {
+    const organisation = organisations[i];
     console.log("Org: " + organisation.login);
     try {
-      var repos = await requestAll("GET /orgs/{org}/repos", {
+      const repos = await requestAll('GET /orgs/{org}/repos', {
         org: organisation.login,
       });
       for (let i = 0; i < repos.length; i++) {
@@ -428,12 +433,12 @@ async function addAllReposToPlanningWorkspace() {
   }
   await addReposToWorkspace(
     managedWorkspaces[planningWorkspaceName].id,
-    repoIds
+    repoIds,
   );
 }
 
 async function updatePipelines(boardsFolderPath, teams) {
-  var pipelineDefinitions = loadPipelineDefinition(boardsFolderPath, "team");
+  const pipelineDefinitions = loadPipelineDefinition(boardsFolderPath, 'team');
 
   for (let i = 0; i < teams.length; i++) {
     const team = teams[i];
@@ -444,7 +449,7 @@ async function updatePipelines(boardsFolderPath, teams) {
 }
 
 async function updateWorkspacePipelines(workspaceId, pipelineDefinitions) {
-  var pipelines = await getPipelinesOfWorkspace(workspaceId);
+  let pipelines = await getPipelinesOfWorkspace(workspaceId);
   await deleteEpicPipeline(pipelines);
   pipelines = await getPipelinesOfWorkspace(workspaceId);
   for (let j = 0; j < pipelineDefinitions.pipelines.length; j++) {
@@ -488,20 +493,20 @@ async function deleteEpicPipeline(pipelines) {
 }
 
 async function getPipelinesOfWorkspace(workspaceId) {
-  var response = JSON.parse(
-    await rp({
-      uri: `https://api.zenhub.com/v1/graphql?query=[workspacePipelines]`,
-      headers: {
-        "x-authentication-token": gZenhubBffToken,
-        "x-zenhub-agent": "webapp/3.3.19",
-        "content-type": "application/json",
-      },
-      method: "POST",
-      body:
+  const response = JSON.parse(
+      await rp({
+        uri: `https://api.zenhub.com/v1/graphql?query=[workspacePipelines]`,
+        headers: {
+          "x-authentication-token": gZenhubBffToken,
+          "x-zenhub-agent": 'webapp/3.3.19',
+          "content-type": 'application/json',
+        },
+        method: 'POST',
+        body:
         '[{"operationName":"workspacePipelines","variables":{"workspaceId":"' +
         workspaceId +
         '"},"query":"query workspacePipelines($workspaceId: ID!) {\\n  workspace(id: $workspaceId) {\\n    id\\n    prioritiesConnection {\\n      nodes {\\n        ...boardPriorityData\\n        __typename\\n      }\\n      __typename\\n    }\\n    pipelinesConnection {\\n      nodes {\\n        ...boardPipelineData\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\\nfragment boardPriorityData on Priority {\\n  id\\n  name\\n  color\\n  __typename\\n}\\n\\nfragment boardPipelineData on Pipeline {\\n  id\\n  name\\n  description\\n  isEpicPipeline\\n  workspace {\\n    id\\n    __typename\\n  }\\n  __typename\\n}\\n"}]',
-    })
+      }),
   );
   await sleep(5000 * Math.random());
   return response[0].data.workspace.pipelinesConnection.nodes;
@@ -585,11 +590,11 @@ async function updateWorkspaceRepos(teams) {
     var teamRepoIds = await getRepoIdsOfTeam(team);
     teamRepoIds.push((await getRepoByName(defaultRepoOrg, defaultRepoName)).id);
     var workspace = managedWorkspaces[team.name];
-    var reposToAdd = teamRepoIds.filter(
-      (r) => !workspace.repositories.includes(r)
+    const reposToAdd = teamRepoIds.filter(
+        (r) => !workspace.repositories.includes(r),
     );
-    var reposToRemove = workspace.repositories.filter(
-      (r) => !teamRepoIds.includes(r)
+    const reposToRemove = workspace.repositories.filter(
+        (r) => !teamRepoIds.includes(r),
     );
     await addReposToWorkspace(workspace.id, reposToAdd);
     await removeReposFromWorkspace(workspace.id, reposToRemove);
@@ -597,10 +602,10 @@ async function updateWorkspaceRepos(teams) {
 }
 
 async function getRepoIdsOfTeam(team) {
-  var teamRepoIds = [];
+  let teamRepoIds = [];
   for (let i = 0; i < team.repos.length; i++) {
     const repo = team.repos[i];
-    var split = repo.split("/");
+    const split = repo.split('/');
     if (split.length == 2) {
       teamRepoIds.push((await getRepoByName(split[0], split[1])).id);
     } else {
@@ -611,8 +616,8 @@ async function getRepoIdsOfTeam(team) {
 }
 
 async function getRepoIdsOfOrg(org) {
-  var repoIds = [];
-  var repos = await requestAll("GET /orgs/{org}/repos", {
+  const repoIds = [];
+  const repos = await requestAll('GET /orgs/{org}/repos', {
     org: org,
   });
 
@@ -625,7 +630,7 @@ async function getRepoIdsOfOrg(org) {
 }
 
 async function createWorkspace(name) {
-  var defaultRepo = await getRepoByName(defaultRepoOrg, defaultRepoName);
+  const defaultRepo = await getRepoByName(defaultRepoOrg, defaultRepoName);
 
   await rp({
     uri: `https://api.zenhub.com/v1/graphql`,
@@ -726,7 +731,7 @@ async function addRepoToWorkspace(workspaceId, repoId) {
 
 async function getRepoByName(org, name) {
   if (!repoCache[org + "/" + name]) {
-    var response = await octokit.request("GET /repos/{owner}/{repo}", {
+    const response = await octokit.request('GET /repos/{owner}/{repo}', {
       owner: org,
       repo: name,
     });
@@ -739,14 +744,14 @@ async function getRepoByName(org, name) {
 
 async function updateManagedWorkspaces() {
   managedWorkspaces = {};
-  var defaultRepo = await getRepoByName(defaultRepoOrg, defaultRepoName);
-  var response = JSON.parse(
-    await rp({
-      uri: `https://api.zenhub.com/p2/repositories/${defaultRepo.id}/workspaces`,
-      headers: {
-        "X-Authentication-Token": gZenhubToken,
-      },
-    })
+  const defaultRepo = await getRepoByName(defaultRepoOrg, defaultRepoName);
+  const response = JSON.parse(
+      await rp({
+        uri: `https://api.zenhub.com/p2/repositories/${defaultRepo.id}/workspaces`,
+        headers: {
+          "X-Authentication-Token": gZenhubToken,
+        },
+      }),
   );
   await sleep(5000 * Math.random());
   for (let i = 0; i < response.length; i++) {
@@ -762,14 +767,14 @@ function workspaceExists(name) {
 }
 
 function parse(teamsFolderPath) {
-  var teams = [];
-  var regex = /=+\s*(?<Name>.+)[\r\n]+(?<body>([^=].+[\r\n]+)*)/gm;
+  const teams = [];
+  const regex = /=+\s*(?<Name>.+)[\r\n]+(?<body>([^=].+[\r\n]+)*)/gm;
   fs.readdirSync(path.resolve(teamsFolderPath)).forEach((file) => {
-    var content = fs.readFileSync(path.join(teamsFolderPath, file), {
-      encoding: "utf-8",
+    const content = fs.readFileSync(path.join(teamsFolderPath, file), {
+      encoding: 'utf-8',
     });
-    var team = { members: [], repos: [] };
-    var matches = content.matchAll(regex);
+    const team = {members: [], repos: []};
+    const matches = content.matchAll(regex);
     for (const match of matches) {
       if (!match[0].startsWith("==")) {
         team.name = match[1];
@@ -789,10 +794,10 @@ function parse(teamsFolderPath) {
 }
 
 async function requestAll(request, parameters) {
-  var result = [];
+  let result = [];
   parameters["per_page"] = "100";
-  var page = 1;
-  var response;
+  let page = 1;
+  let response;
   do {
     parameters["page"] = page++;
     response = await octokit.request(request, parameters);

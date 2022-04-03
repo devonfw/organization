@@ -4,20 +4,20 @@ const path = require("path");
 
 const labelColor = "010101";
 const defaultRepo = "devonfw/.github";
-var octokit = undefined;
+let octokit = undefined;
 
 async function main(teamsFolderPath, token) {
   octokit = new Octokit({
     auth: token,
   });
-  var teams = [];
-  var regex = /=+\s*(?<Name>.+)[\r\n]+(?<body>([^=].+[\r\n]+)*)/gm;
+  const teams = [];
+  const regex = /=+\s*(?<Name>.+)[\r\n]+(?<body>([^=].+[\r\n]+)*)/gm;
   fs.readdirSync(path.resolve(teamsFolderPath)).forEach((file) => {
-    var content = fs.readFileSync(path.join(teamsFolderPath, file), {
-      encoding: "utf-8",
+    const content = fs.readFileSync(path.join(teamsFolderPath, file), {
+      encoding: 'utf-8',
     });
-    var team = { members: [], repos: [] };
-    var matches = content.matchAll(regex);
+    const team = {members: [], repos: []};
+    const matches = content.matchAll(regex);
     for (const match of matches) {
       if (!match[0].startsWith("==")) {
         team.name = match[1];
@@ -52,7 +52,7 @@ async function createLabelForTeam(team) {
   console.log("Creating labels for: " + team.name);
   for (let i = 0; i < team.repos.length; i++) {
     const repo = team.repos[i];
-    var split = repo.split("/");
+    const split = repo.split('/');
     if (split.length == 2) {
       await createLabelForTeamInRepo(team, split[0], split[1]);
     } else {
@@ -63,7 +63,7 @@ async function createLabelForTeam(team) {
 
 async function createLabelForTeamInOrg(team, organisation) {
   console.log("Creating labels in org: " + organisation);
-  var repos = await requestAll("GET /orgs/{org}/repos", {
+  const repos = await requestAll('GET /orgs/{org}/repos', {
     org: organisation,
   });
 
@@ -74,7 +74,7 @@ async function createLabelForTeamInOrg(team, organisation) {
 }
 
 async function createLabelForTeamInRepo(team, owner, repo) {
-  var request = "POST /repos/{owner}/{repo}/labels";
+  let request = "POST /repos/{owner}/{repo}/labels";
   try {
     await octokit.request("GET /repos/{owner}/{repo}/labels/{name}", {
       owner: owner,
@@ -102,9 +102,9 @@ async function createLabelForTeamInRepo(team, owner, repo) {
 
 async function removeOldLabels(teams) {
   console.log("Removing old labels");
-  var organisations = await requestAll("GET /user/orgs", {});
-  for (var i = 0; i < organisations.length; i++) {
-    var organisation = organisations[i];
+  const organisations = await requestAll('GET /user/orgs', {});
+  for (let i = 0; i < organisations.length; i++) {
+    const organisation = organisations[i];
     await removeOldLabelsFromOrg(teams, organisation.login);
   }
 }
@@ -112,7 +112,7 @@ async function removeOldLabels(teams) {
 async function removeOldLabelsFromOrg(teams, organisation) {
   console.log("Removing old labels from organisation: " + organisation);
   try {
-    var repos = await requestAll("GET /orgs/{org}/repos", {
+    const repos = await requestAll('GET /orgs/{org}/repos', {
       org: organisation,
     });
     for (let i = 0; i < repos.length; i++) {
@@ -126,7 +126,7 @@ async function removeOldLabelsFromOrg(teams, organisation) {
 
 async function removeOldLabelsFromRepo(teams, owner, repo) {
   console.log("Removing old labels from repo: " + owner + "/" + repo);
-  var labels = await requestAll("GET /repos/{owner}/{repo}/labels", {
+  const labels = await requestAll('GET /repos/{owner}/{repo}/labels', {
     owner: owner,
     repo: repo,
   });
@@ -162,10 +162,10 @@ function getLabelName(team) {
 }
 
 async function requestAll(request, parameters) {
-  var result = [];
+  let result = [];
   parameters["per_page"] = "100";
-  var page = 1;
-  var response;
+  let page = 1;
+  let response;
   do {
     parameters["page"] = page++;
     response = await octokit.request(request, parameters);
