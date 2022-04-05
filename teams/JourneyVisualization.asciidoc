@@ -1,7 +1,12 @@
 = JourneyVisualization
 
 == Members
+* Aleksandar-Kostic
+* moritzLanger
+* vlad961
+* markus1728
 * Ykernerm
+
 
 == Repos
 * devonfw/journeys
