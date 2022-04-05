@@ -6,6 +6,8 @@
 * MikeSchumacherCapgemini
 * GuentherJulian
 * mdukhan 
+* EduardKrieger
+
 
 == Repos
 * devonfw/cobigen

@@ -1,9 +1,12 @@
-= ClouAssetHarvesting
+= CloudAssetHarvesting
 
 == Members
-
+* entgl-t
+* quantumfate
+* MarvDan 
 
 == Repos
+* devonfw/devon4j
 
 
 
