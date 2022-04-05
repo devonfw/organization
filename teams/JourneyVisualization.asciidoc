@@ -1,7 +1,6 @@
 = JourneyVisualization
 
 == Members
-* Aleksandar-Kostic
 * moritzLanger
 * vlad961
 * markus1728
