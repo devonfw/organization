@@ -5,9 +5,11 @@
 * jan-vcapgemini
 * MikeSchumacherCapgemini
 * GuentherJulian
-* mdukhan 
+* mdukhan
 * EduardKrieger
 
 
 == Repos
 * devonfw/cobigen
+* devonfw/ts-merger
+* devonfw/cobigen-devon4node-server

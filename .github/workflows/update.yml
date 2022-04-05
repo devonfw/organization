@@ -24,7 +24,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: "12"
+          node-version: "17"
 
       - name: npm install
         run: |
@@ -41,5 +41,14 @@ jobs:
           node ./scripts/updateLabels.js "./teams" ${{ secrets.GH_TOKEN }}
 
       - name: update team boards
+        id: update-team-boards
         run: |
           node ./scripts/updateTeamBoards.js "./teams" "./boards" ${{ secrets.GH_TOKEN }} ${{ secrets.ZENHUB_TOKEN }} ${{ secrets.GH_USERNAME }} ${{ secrets.GH_PASSWORD }} ${{ secrets.MAIL_USERNAME }} ${{ secrets.MAIL_PASSWORD }}
+        continue-on-error: true
+          
+      - name: Archive error HTML page
+        if: steps.update-team-boards.outcome != 'success'
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: ./errorPageContent.html

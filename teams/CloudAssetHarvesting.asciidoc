@@ -1,6 +1,7 @@
 = CloudAssetHarvesting
 
 == Members
+* baumeister25
 * entgl-t
 * quantumfate
 * MarvDan 

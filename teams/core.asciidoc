@@ -1,9 +1,0 @@
-= Core
-
-== Members
-
-== Repos
-* devonfw
-* devonfw-forge
-* devonfw-sample
-* devonfw-tutorials
