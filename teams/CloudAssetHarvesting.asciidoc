@@ -5,6 +5,8 @@
 * entgl-t
 * quantumfate
 * MarvDan 
+* adibwaluya
+* Bene90
 
 == Repos
 * devonfw/devon4j
