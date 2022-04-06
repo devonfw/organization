@@ -2,13 +2,11 @@
 
 == Members
 * baumeister25
+* tahoell
 * entgl-t
 * quantumfate
 * MarvDan 
 
 == Repos
 * devonfw/devon4j
-
-
-
 
