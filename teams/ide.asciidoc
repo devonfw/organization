@@ -3,9 +3,9 @@
 == Members
 * cinnamon-coder-hub
 * tobka777
-* nikiOstrov 
 * creitz25
 * Bene90
+* alfeilex
 
 == Repos
 * devonfw/ide
