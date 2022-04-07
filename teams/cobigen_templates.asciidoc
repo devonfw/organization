@@ -7,7 +7,7 @@
 * GuentherJulian
 * mdukhan
 * EduardKrieger
-
+* Bene90
 
 == Repos
 * devonfw/cobigen
