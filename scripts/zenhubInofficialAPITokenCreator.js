@@ -37,10 +37,6 @@ class ZenhubInofficialApiTokenCreator {
   /**
    * Returns the token of the zenhub API that is used.
    *
-   * @param {string} username github user account to login with
-   * @param {string} password Github user account password to login with
-   * @param {string} mailUsername The username of the mail account Needed to download the 2FA verificaton token
-   * @param {string} mailPassword  The passowrd of the mail account.
    * @return {string} The zenhub API token.
    */
   async getToken() {
@@ -65,7 +61,7 @@ class ZenhubInofficialApiTokenCreator {
       await this.saveCookies();
 
       if (this.page.mainFrame().url() == 'https://app.zenhub.com/login') {
-        // Two possibilities for now. 
+        // Two possibilities for now.
         console.log('Zenhub login page');
         await this.page.waitForSelector('.zhc-button--color-primary');
         console.log('Clicking on the login button');
@@ -95,9 +91,12 @@ class ZenhubInofficialApiTokenCreator {
     } catch (e) {
       console.error(this.page.mainFrame().url());
       const bodyHTML = await this.page.evaluate(() => document.body.outerHTML);
-      fs.writeFile('errorPageContent.html', bodyHTML, (err) => {
-        console.error(err);
-      });
+      // write the last visible page for debugging to the logs folder
+      fs.promises.mkdir('logs')
+          .then( fs.promises.writeFile('logs/last_visible_page.html', bodyHTML))
+          .catch((err) => {
+            console.error(err);
+          });
       console.error(e);
     }
 
@@ -144,17 +143,12 @@ class ZenhubInofficialApiTokenCreator {
   /**
    * Authenticate using the given github account.
    * This method does all steps necessary to login to github via the github login screens.
-   *
-   * @param {string} username The username of the github account
-   * @param {string} password The password of the github accountj
-   * @param {string} mailUsername The username of the corresponding mail account for 2 FA verification code.
-   * @param {string} mailPassword The password of the corresponding mail account.
    */
-  async authenticateGithub(username, password, mailUsername, mailPassword) {
+  async authenticateGithub() {
     if (this.page.mainFrame().url().startsWith('https://github.com/login')) {
       console.log('On Github login page. Trying to sign in.');
-      await this.page.type('#login_field', username);
-      await this.page.type('#password', password);
+      await this.page.type('#login_field', this.ghUsername);
+      await this.page.type('#password', this.ghPassword);
       await this.page.click('[name="commit"]');
       await this.page.waitForNetworkIdle().catch((err) => {
         console.error(
@@ -177,8 +171,6 @@ class ZenhubInofficialApiTokenCreator {
     ) {
       console.log('Need to verify the new device.');
       const mailbody = await this.getMailBySubject(
-          mailUsername,
-          mailPassword,
           '[GitHub] Please verify your device',
       );
       if (mailbody) {
@@ -232,17 +224,15 @@ class ZenhubInofficialApiTokenCreator {
   /**
    * Returns the unread mail with a given subject. Marks all mails as read.
     *
-   * @param {string} mailUser the username of the mail account
-   * @param {string} mailPassword the passowrd of the mail account
    * @param {string} expectedSubject the subject to look for.
    * @return {string} The mail body of the first unread mail with the given subject.
    */
-  async getMailBySubject(mailUser, mailPassword, expectedSubject) {
+  async getMailBySubject(expectedSubject) {
     console.log('Retrieving mails to get the 2FA token');
     const config = {
       imap: {
-        user: mailUser,
-        password: mailPassword,
+        user: this.mailUsername,
+        password: this.mailPassword,
         host: 'imap.gmail.com',
         port: 993,
         tls: true,
