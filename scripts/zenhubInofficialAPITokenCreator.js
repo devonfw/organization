@@ -20,10 +20,18 @@ const imaps = require('imap-simple');
 class ZenhubInofficialApiTokenCreator {
   /**
    * Constructor method
+   * @param {string} ghUsername Username of the github account to login with
+   * @param {string} ghPassword Passwird of the github account to login with
+   * @param {string} mailUsername Username of the Google mail account to login with
+   * @param {string} mailPassword Password of the Google mail account to login with
    */
-  constructor() {
+  constructor(ghUsername, ghPassword, mailUsername, mailPassword) {
     this.browser;
     this.page;
+    this.ghUsername = ghUsername;
+    this.ghPassword = ghPassword;
+    this.mailUsername = mailUsername;
+    this.mailPassword = mailPassword;
   }
 
   /**
@@ -35,8 +43,8 @@ class ZenhubInofficialApiTokenCreator {
    * @param {string} mailPassword  The passowrd of the mail account.
    * @return {string} The zenhub API token.
    */
-  async getToken(username, password, mailUsername, mailPassword) {
-    console.log(username);
+  async getToken() {
+    console.log(this.ghUsername);
     let token = undefined;
     this.browser = await puppeteer.launch();
     this.page = await this.browser.newPage();
@@ -57,6 +65,7 @@ class ZenhubInofficialApiTokenCreator {
       await this.saveCookies();
 
       if (this.page.mainFrame().url() == 'https://app.zenhub.com/login') {
+        // Two possibilities for now. 
         console.log('Zenhub login page');
         await this.page.waitForSelector('.zhc-button--color-primary');
         console.log('Clicking on the login button');
@@ -73,12 +82,7 @@ class ZenhubInofficialApiTokenCreator {
               err,
           );
         });
-        await this.authenticateGithub(
-            username,
-            password,
-            mailUsername,
-            mailPassword,
-        );
+        await this.authenticateGithub();
         await this.waitForZenhubLandingPage();
       } else {
         console.error('Zenhub login page expected');
