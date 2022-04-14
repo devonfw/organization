@@ -32,14 +32,9 @@ async function main(
 
   gZenhubToken = zenhubToken;
 
-  const zenhubTokenCreator = new ZenhubInofficialApiTokenCreator();
+  const zenhubTokenCreator = new ZenhubInofficialApiTokenCreator(username, password, mailUser, mailPassword);
 
-  gZenhubBffToken = await zenhubTokenCreator.getToken(
-      username,
-      password,
-      mailUser,
-      mailPassword
-  );
+  gZenhubBffToken = await zenhubTokenCreator.getToken();
 
   await updateManagedWorkspaces();
 
