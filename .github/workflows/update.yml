@@ -4,7 +4,7 @@ name: Update
 
 on:
   push:
-    branches: [feature/small_fixes]
+    branches: [master]
 
   workflow_dispatch:
 
