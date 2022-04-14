@@ -11,4 +11,5 @@
 
 == Repos
 * devonfw/devon4j
+* devonfw/solutions
 
