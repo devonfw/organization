@@ -12,13 +12,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Cache cookies
-        uses: actions/cache@v2
-        with:
-          path: ./cookies
-          key: ${{ runner.os }}-${{ hashFiles('**/*.js') }}
-          restore-keys: |
-            ${{ runner.os }}-
+      # Cookie cache currently not working, because it's loosing the permission after some time
+      #
+      # - name: Cache cookies
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ./cookies
+      #     key: ${{ runner.os }}-${{ hashFiles('**/*.js') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-
 
       - uses: actions/checkout@v2
 
@@ -44,11 +46,20 @@ jobs:
         id: update-team-boards
         run: |
           node ./scripts/updateTeamBoards.js "./teams" "./boards" ${{ secrets.GH_TOKEN }} ${{ secrets.ZENHUB_TOKEN }} ${{ secrets.GH_USERNAME }} ${{ secrets.GH_PASSWORD }} ${{ secrets.MAIL_USERNAME }} ${{ secrets.MAIL_PASSWORD }}
+        # Continue on error to archive the last html page for further debugging
         continue-on-error: true
           
-      - name: Archive error HTML page
+      
+      # Archive files that have been written by the procedures in case of an error
+      - name: Archive further logs from run for debugging
         if: steps.update-team-boards.outcome != 'success'
         uses: actions/upload-artifact@v3
         with:
-          name: code-coverage-report
-          path: ./errorPageContent.html
+          name: further-logs
+          path: logs
+            
+      # Check if the before ignored error in updateTeamBoards step happened
+      # then set the overall status to failed. Else failed runs are masked
+      - name: Check on failures
+        if: steps.update-team-boards.outcome != 'success'
+        run: exit 1

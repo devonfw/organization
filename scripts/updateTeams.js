@@ -3,15 +3,15 @@ const fs = require("fs");
 const path = require("path");
 
 const parentTeamName = "Automatically managed";
-var octokit = undefined;
+let octokit = undefined;
 
-var parentTeams = {};
+const parentTeams = {};
 
 async function main(teamsFolderPath, token) {
   octokit = new Octokit({
     auth: token,
   });
-  var teams = parse(teamsFolderPath);
+  const teams = parse(teamsFolderPath);
   console.log(teams);
 
   await removeOldTeams(teams);
@@ -21,14 +21,14 @@ async function main(teamsFolderPath, token) {
 }
 
 function parse(teamsFolderPath) {
-  var teams = [];
-  var regex = /=+\s*(?<Name>.+)[\r\n]+(?<body>([^=].+[\r\n]+)*)/gm;
+  const teams = [];
+  const regex = /=+\s*(?<Name>.+)[\r\n]+(?<body>([^=].+[\r\n]+)*)/gm;
   fs.readdirSync(path.resolve(teamsFolderPath)).forEach((file) => {
-    var content = fs.readFileSync(path.join(teamsFolderPath, file), {
-      encoding: "utf-8",
+    const content = fs.readFileSync(path.join(teamsFolderPath, file), {
+      encoding: 'utf-8',
     });
-    var team = { members: [], repos: [] };
-    var matches = content.matchAll(regex);
+    const team = {members: [], repos: []};
+    const matches = content.matchAll(regex);
     for (const match of matches) {
       if (!match[0].startsWith("==")) {
         team.name = match[1];
@@ -49,14 +49,14 @@ function parse(teamsFolderPath) {
 
 async function createMissingTeams(teams) {
   console.log("Creating missing teams");
-  for (var i = 0; i < teams.length; i++) {
+  for (let i = 0; i < teams.length; i++) {
     await createMissingTeam(teams[i]);
   }
 }
 
 async function createMissingTeam(team) {
-  var organisations = getOrganisationsFromTeam(team);
-  for (var i = 0; i < organisations.length; i++) {
+  const organisations = getOrganisationsFromTeam(team);
+  for (let i = 0; i < organisations.length; i++) {
     console.log("Organisation: " + organisations[i]);
     if (!(await getParentTeamId(organisations[i]))) {
       console.log("Creating parent team");
@@ -82,7 +82,7 @@ async function createMissingTeam(team) {
 }
 
 async function teamExisits(organisation, name) {
-  var childteams = await getChildTeams(organisation);
+  const childteams = await getChildTeams(organisation);
   for (let i = 0; i < childteams.length; i++) {
     const team = childteams[i];
     if (team.name == name) {
@@ -93,10 +93,10 @@ async function teamExisits(organisation, name) {
 }
 
 function getOrganisationsFromTeam(team) {
-  var organisations = [];
-  for (var i = 0; i < team.repos.length; i++) {
-    var split = team.repos[i].split("/");
-    var org = split[0];
+  const organisations = [];
+  for (let i = 0; i < team.repos.length; i++) {
+    const split = team.repos[i].split('/');
+    const org = split[0];
     if (!organisations.includes(org)) {
       organisations.push(org);
     }
@@ -106,22 +106,22 @@ function getOrganisationsFromTeam(team) {
 
 async function removeOldTeams(teams) {
   console.log("Removing old teams");
-  var organisations = await requestAll("GET /user/orgs", {});
-  for (var i = 0; i < organisations.length; i++) {
-    var childteams = await getChildTeams(organisations[i].login);
+  const organisations = await requestAll('GET /user/orgs', {});
+  for (let i = 0; i < organisations.length; i++) {
+    const childteams = await getChildTeams(organisations[i].login);
     await removeTeamsIfOld(teams, childteams, organisations[i].login);
   }
 }
 
 async function getChildTeams(organisation) {
-  var parentTeamSlug = await getParentTeamSlug(organisation);
+  const parentTeamSlug = await getParentTeamSlug(organisation);
   if (parentTeamSlug) {
-    var childteams = await requestAll(
-      "GET /orgs/{org}/teams/{team_slug}/teams",
-      {
-        org: organisation,
-        team_slug: parentTeamSlug,
-      }
+    const childteams = await requestAll(
+        "GET /orgs/{org}/teams/{team_slug}/teams",
+        {
+          org: organisation,
+          team_slug: parentTeamSlug,
+        }
     );
     return childteams;
   }
@@ -129,7 +129,7 @@ async function getChildTeams(organisation) {
 }
 
 async function removeTeamsIfOld(teams, childteams, organisation) {
-  for (var i = 0; i < childteams.length; i++) {
+  for (let i = 0; i < childteams.length; i++) {
     await removeTeamIfOld(teams, childteams[i], organisation);
   }
 }
@@ -150,10 +150,10 @@ async function getParentTeamSlug(organisation) {
     return parentTeams[organisation].slug;
   }
   try {
-    var githubteams = await requestAll("GET /orgs/{org}/teams", {
+    const githubteams = await requestAll('GET /orgs/{org}/teams', {
       org: organisation,
     });
-    for (var i = 0; i < githubteams.length; i++) {
+    for (let i = 0; i < githubteams.length; i++) {
       if (githubteams[i].name == parentTeamName) {
         parentTeams[organisation] = githubteams[i];
         return parentTeams[organisation].slug;
@@ -170,10 +170,10 @@ async function getParentTeamId(organisation) {
     return parentTeams[organisation].id;
   }
   try {
-    var githubteams = await requestAll("GET /orgs/{org}/teams", {
+    const githubteams = await requestAll('GET /orgs/{org}/teams', {
       org: organisation,
     });
-    for (var i = 0; i < githubteams.length; i++) {
+    for (let i = 0; i < githubteams.length; i++) {
       if (githubteams[i].name == parentTeamName) {
         parentTeams[organisation] = githubteams[i];
         return parentTeams[organisation].id;
@@ -186,7 +186,7 @@ async function getParentTeamId(organisation) {
 }
 
 function teamHasToBeDeleted(teams, childteam) {
-  for (var i = 0; i < teams.length; i++) {
+  for (let i = 0; i < teams.length; i++) {
     if (teams[i].name == childteam.name) {
       return false;
     }
@@ -207,12 +207,12 @@ function getTeamSlugByName(childteams, name) {
 async function updateTeamMembers(team, organisation, teamSlug) {
   if (teamSlug) {
     console.log("Updating members of " + team.name);
-    var members = await requestAll(
-      "GET /orgs/{org}/teams/{team_slug}/members",
-      {
-        org: organisation,
-        team_slug: teamSlug,
-      }
+    const members = await requestAll(
+        "GET /orgs/{org}/teams/{team_slug}/members",
+        {
+          org: organisation,
+          team_slug: teamSlug,
+        }
     );
     await deleteOldUsers(members, team, organisation, teamSlug);
     await createUsers(team, organisation, teamSlug);
@@ -229,7 +229,7 @@ async function createUsers(team, organisation, teamSlug) {
         org: organisation,
         team_slug: teamSlug,
         username: member,
-      }
+      },
     );
     await sleep(750);
   }
@@ -246,7 +246,7 @@ async function deleteOldUsers(members, team, organisation, teamSlug) {
           org: organisation,
           team_slug: teamSlug,
           username: member.login,
-        }
+        },
       );
       await sleep(750);
     }
@@ -254,16 +254,16 @@ async function deleteOldUsers(members, team, organisation, teamSlug) {
 }
 
 async function ensureMembers(teams) {
-  var childteams = {};
+  const childteams = {};
   for (let i = 0; i < teams.length; i++) {
     const team = teams[i];
-    var organisations = getOrganisationsFromTeam(team);
-    for (var j = 0; j < organisations.length; j++) {
-      var organisation = organisations[j];
+    const organisations = getOrganisationsFromTeam(team);
+    for (let j = 0; j < organisations.length; j++) {
+      const organisation = organisations[j];
       if (!childteams[organisation]) {
         childteams[organisation] = await getChildTeams(organisation);
       }
-      var teamSlug = getTeamSlugByName(childteams[organisation], team.name);
+      const teamSlug = getTeamSlugByName(childteams[organisation], team.name);
       await updateTeamMembers(team, organisation, teamSlug);
     }
   }
@@ -271,17 +271,17 @@ async function ensureMembers(teams) {
 
 async function updateTeamRepos(teams) {
   console.log("Removing teams from old repos");
-  var childteams = {};
+  const childteams = {};
   for (let i = 0; i < teams.length; i++) {
     const team = teams[i];
-    var organisations = getOrganisationsFromTeam(team);
-    for (var j = 0; j < organisations.length; j++) {
-      var organisation = organisations[j];
+    const organisations = getOrganisationsFromTeam(team);
+    for (let j = 0; j < organisations.length; j++) {
+      const organisation = organisations[j];
       console.log("Organisation: " + organisation);
       if (!childteams[organisation]) {
         childteams[organisation] = await getChildTeams(organisation);
       }
-      var teamSlug = getTeamSlugByName(childteams[organisation], team.name);
+      const teamSlug = getTeamSlugByName(childteams[organisation], team.name);
       await removeTeamFromOldRepos(team, organisation, teamSlug);
       await addTeamToRepos(team, organisation, teamSlug);
     }
@@ -290,7 +290,7 @@ async function updateTeamRepos(teams) {
 
 async function removeTeamFromOldRepos(team, organisation, teamSlug) {
   console.log("Removing team from old repos: " + team.name);
-  var repos = await requestAll("GET /orgs/{org}/teams/{team_slug}/repos", {
+  const repos = await requestAll('GET /orgs/{org}/teams/{team_slug}/repos', {
     org: organisation,
     team_slug: teamSlug,
   });
@@ -299,13 +299,13 @@ async function removeTeamFromOldRepos(team, organisation, teamSlug) {
     if (repoHasToBeRemoved(team, repo)) {
       console.log("Removing from " + repo.full_name);
       await octokit.request(
-        "DELETE /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}",
+        'DELETE /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}',
         {
           org: organisation,
           team_slug: teamSlug,
           owner: repo.owner.login,
           repo: repo.name,
-        }
+        },
       );
       await sleep(750);
     }
@@ -326,7 +326,7 @@ async function addTeamToRepos(team, organisation, teamSlug) {
   console.log("Ensuring rights of the team: " + team.name);
   for (let i = 0; i < team.repos.length; i++) {
     const teamRepo = team.repos[i];
-    var split = teamRepo.split("/");
+    const split = teamRepo.split('/');
     if (split.length == 2) {
       await addTeamToRepo(organisation, teamSlug, split[0], split[1]);
     } else {
@@ -336,7 +336,7 @@ async function addTeamToRepos(team, organisation, teamSlug) {
 }
 
 async function addTeamToOrg(organisation, teamSlug) {
-  var repos = await requestAll("GET /orgs/{org}/repos", {
+  const repos = await requestAll('GET /orgs/{org}/repos', {
     org: organisation,
   });
 
@@ -356,23 +356,23 @@ async function addTeamToRepo(organisation, teamSlug, owner, repo) {
       owner: owner,
       repo: repo,
       permission: "push",
-    }
+    },
   );
   await sleep(750);
 }
 
 async function requestAll(request, parameters) {
-  var result = [];
+  let result = [];
   parameters["per_page"] = "100";
-  var page = 1;
-  var response;
+  let page = 1;
+  let response;
   do {
     parameters["page"] = page++;
     response = await octokit.request(request, parameters);
     await sleep(750);
     result = result.concat(response.data);
   } while (response && response.body && response.body.length > 0);
-  
+
   return result;
 }
 
@@ -381,7 +381,6 @@ function sleep(ms) {
     setTimeout(resolve, ms);
   });
 }
-
 
 main(process.argv[2], process.argv[3]).catch((e) => {
   console.error(e);
