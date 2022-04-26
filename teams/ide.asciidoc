@@ -6,6 +6,7 @@
 * creitz25
 * Bene90
 * alfeilex
+* arexhepi7
 
 == Repos
 * devonfw/ide
