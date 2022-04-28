@@ -8,7 +8,7 @@ const ZenhubInofficialApiTokenCreator = require('./zenhubInofficialAPITokenCreat
 const description = "Automatically managed";
 const defaultRepoOrg = "devonfw";
 const defaultRepoName = ".github";
-const planningWorkspaceName = "Planning";
+const planningWorkspaceName = "StrategicRoadmap";
 
 let octokit = undefined;
 let gZenhubBffToken = undefined;
