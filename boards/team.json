@@ -9,12 +9,12 @@
             "description": "Issues added to the current sprint"
         },
         {
-            "name": "Review Rework",
-            "description": "Issues that have been reviewed and need rework"
+            "name": "Research",
+            "description": "Issues, which need to be investigated regards their applicability & solutioning"
         },
         {
             "name": "In Progress",
-            "description": "Issues that are in progress"
+            "description": "Issues that are in progress / Rework from reviews"
         },
         {
             "name": "Team Review",
