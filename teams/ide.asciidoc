@@ -7,6 +7,7 @@
 * Bene90
 * alfeilex
 * arexhepi7
+* BizarreBits
 
 == Repos
 * devonfw/ide
