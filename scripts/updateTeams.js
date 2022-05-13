@@ -34,11 +34,11 @@ function parse(teamsFolderPath) {
         team.name = match[1];
       } else if (match[1] == "Members") {
         for (const line of match[2].matchAll(/\s*\*\s*(.+)/g)) {
-          team.members.push(line[1]);
+          team.members.push(line[1].trim());
         }
       } else if (match[1] == "Repos") {
         for (const line of match[2].matchAll(/\s*\*\s*(.+)/g)) {
-          team.repos.push(line[1]);
+          team.repos.push(line[1].trim());
         }
       }
     }
