@@ -17,7 +17,7 @@
 * devonfw/hangar
 * devonfw/devon4ng-ngrx-template
 * devonfw/my-thai-star
-* devonfw/devon4net 
+* devonfw/devon4net
 * devonfw/devonfw.github.io
 * devonfw/devonfw-guide
 * devonfw/devon4j
