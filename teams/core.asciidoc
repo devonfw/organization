@@ -3,7 +3,7 @@
 == Members
 * ssarmokadam
 * suprishi
-* sujith_mn
+* sujith-mn
 * akanagar
 
 == Repos
