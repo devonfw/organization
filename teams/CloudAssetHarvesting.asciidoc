@@ -9,6 +9,7 @@
 * adibwaluya
 * Bene90
 * dendmicap
+* morsymegahed
 
 == Repos
 * devonfw/devon4j
