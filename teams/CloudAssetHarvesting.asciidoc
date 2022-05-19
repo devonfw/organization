@@ -10,8 +10,8 @@
 * Bene90
 * dendmicap
 * morsymegahed
+* denise-khuu
 
 == Repos
 * devonfw/devon4j
 * devonfw/solutions
-
