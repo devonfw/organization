@@ -8,6 +8,7 @@
 * alfeilex
 * arexhepi7
 * BizarreBits
+* arexhepi7
 
 == Repos
 * devonfw/ide
