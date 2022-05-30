@@ -8,6 +8,7 @@
 * mdukhan
 * EduardKrieger
 * Bene90
+* AnnaOsipjan 
 
 == Repos
 * devonfw/cobigen
