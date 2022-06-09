@@ -2,6 +2,7 @@
 
 == Members
 * AlexanderTrusheim
+* Dawid-Dlugokecki-Capgemini
 
 
 == Repos
