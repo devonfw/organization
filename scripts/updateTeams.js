@@ -3,6 +3,8 @@ const fs = require("fs");
 const path = require("path");
 
 const parentTeamName = "Automatically managed";
+const defaultRepoOrg = "devonfw";
+const defaultRepoName = ".github";
 let octokit = undefined;
 
 const parentTeams = {};
@@ -12,7 +14,7 @@ async function main(teamsFolderPath, token) {
     auth: token,
   });
   const teams = parse(teamsFolderPath);
-  console.log(teams);
+  console.log(teams);  
 
   await removeOldTeams(teams);
   await createMissingTeams(teams);
@@ -28,6 +30,7 @@ function parse(teamsFolderPath) {
       encoding: 'utf-8',
     });
     const team = {members: [], repos: []};
+    team.repos.push(defaultRepoOrg + '/' + defaultRepoName);
     const matches = content.matchAll(regex);
     for (const match of matches) {
       if (!match[0].startsWith("==")) {
