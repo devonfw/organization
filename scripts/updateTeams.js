@@ -330,7 +330,7 @@ async function addTeamToRepos(team, organisation, teamSlug) {
   for (let i = 0; i < team.repos.length; i++) {
     const teamRepo = team.repos[i];
     const split = teamRepo.split('/');
-    if(trim(split[0]) != trim(organisation)) {
+    if(split[0].trim() != organisation.trim()) {
       continue;
     }
     if (split.length == 2) {
