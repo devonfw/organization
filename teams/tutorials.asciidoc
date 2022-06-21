@@ -13,6 +13,7 @@
 * devonfw-tutorials/tutorial-compiler
 * devonfw-tutorials/katacoda-scenarios
 * devonfw-tutorials/katacoda-scenarios-dev
+* devonfw/devonfw.github.io
 
 
 
