@@ -12,6 +12,7 @@
 * devonfw-tutorials/wiki-tutorials
 * devonfw-tutorials/tutorial-compiler
 * devonfw-tutorials/katacoda-scenarios
+* devonfw-tutorials/katacoda-scenarios-dev
 
 
 
