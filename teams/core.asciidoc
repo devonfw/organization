@@ -53,3 +53,5 @@
 * devonfw/my-thai-star-hana-data-generator
 * devonfw/cobigen-template-server
 * devonfw/security
+* devonfw-sample/devon4j-kafka-employeeapp
+
