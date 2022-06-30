@@ -10,6 +10,7 @@
 * quantumfate
 * ZakariaeMkassi
 * morsymegahed
+* NelsonNew
 
 == Repos
 * devonfw/cobigen
