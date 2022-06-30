@@ -7,6 +7,8 @@
 * acokos
 * mjarraya97
 * Bene90
+* pmalawsk
+* pgorska
 
 
 == Repos
