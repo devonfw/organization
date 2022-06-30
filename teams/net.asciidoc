@@ -4,6 +4,11 @@
 * AlexanderTrusheim
 * Dawid-Dlugokecki-Capgemini
 * Bene90
+* moritzLanger
+* vlad961
+* zichriste
+* BenjaminE98
+* shiftwolf
 
 
 == Repos
