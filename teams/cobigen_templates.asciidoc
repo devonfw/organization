@@ -1,14 +1,15 @@
 = CobiGen_Templates
 
 == Members
-* LarsReinken
 * jan-vcapgemini
-* MikeSchumacherCapgemini
 * GuentherJulian
 * mdukhan
 * EduardKrieger
 * Bene90
 * AnnaOsipjan 
+* quantumfate
+* ZakariaeMkassi
+* morsymegahed
 
 == Repos
 * devonfw/cobigen
