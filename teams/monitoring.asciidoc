@@ -1,12 +1,12 @@
 = Monitoring
 
 == Members
-* EduardKrieger
 * denise-khuu 
-* entgl-t
-* TugbaDalmaz 
-* markus1728
-* paulinagorskacap 
+* NicolasVanBellen
+* dendmicap
+* acokos
+* mjarraya97
+
 
 == Repos
 
