@@ -13,6 +13,7 @@
 * NelsonNew
 * Ali7223
 * Zylesto
+* KHucklenbroich
 
 == Repos
 * devonfw/cobigen
