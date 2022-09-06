@@ -14,6 +14,7 @@
 * Ali7223
 * Zylesto
 * KHucklenbroich
+* leonie19s
 
 == Repos
 * devonfw/cobigen
