@@ -5,13 +5,12 @@
 * tobka777
 * creitz25
 * Bene90
-* alfeilex
-* arexhepi7
-* BizarreBits
-* akuhana
-* ahmedagdmoun
-* sarahffm
-
+* Amueller36
+* morsymegahed
+* Ttring
+* mustafaokyay
+* hohwille
 
 == Repos
 * devonfw/ide
+
