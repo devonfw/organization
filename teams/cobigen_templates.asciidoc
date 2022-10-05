@@ -15,6 +15,7 @@
 * Zylesto
 * KHucklenbroich
 * leonie19s
+* lur1an
 
 == Repos
 * devonfw/cobigen
