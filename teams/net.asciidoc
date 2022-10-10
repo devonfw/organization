@@ -1,16 +1,17 @@
 = devon4net
 
 == Members
-* AlexanderTrusheim
-* Dawid-Dlugokecki-Capgemini
-* Bene90
-* moritzLanger
 * vlad961
 * zichriste
 * BenjaminE98
-* shiftwolf
+* Bene90
+* moritzLanger
+* AlexanderTrusheim
 * OthmanMoukhli
-* Jonas-sour
+* sarahffm
+
+
+
 
 
 
