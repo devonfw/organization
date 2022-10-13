@@ -10,6 +10,7 @@
 * Ttring
 * mustafaokyay
 * hohwille
+* alfeilex
 
 == Repos
 * devonfw/ide
