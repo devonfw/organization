@@ -52,7 +52,6 @@
 * devonfw/shop-floor
 * devonfw/devon4quarkus
 * devonfw/cobigen-template-plugin
-* devonfw/my-thai-star-hana-data-generator
 * devonfw/cobigen-template-server
 * devonfw/security
 * devonfw-sample/devon4j-kafka-employeeapp
