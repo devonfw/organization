@@ -30,7 +30,6 @@
 * devonfw/devon4ng
 * devonfw/getting-started
 * devonfw/organization
-* devonfw/organizationhooks
 * devonfw/dashboard
 * devonfw/devon4ng-library
 * devonfw/production-line-shared-lib
