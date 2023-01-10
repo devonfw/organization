@@ -7,7 +7,6 @@
 * Ykernerm
 * acokos
 * Bene90
-* mjarraya97
 
 
 == Repos
