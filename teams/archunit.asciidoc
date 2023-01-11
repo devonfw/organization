@@ -6,6 +6,8 @@
 * NicolasVanBellen
 * moritzLanger
 * dendmicap
+* hohwille
+* Bene90
 
 == Repos
 * devonfw-sample/archunit
