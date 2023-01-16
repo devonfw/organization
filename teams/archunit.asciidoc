@@ -1,4 +1,4 @@
-= Tutorials
+= ArchUnit
 
 == Members
 * vlad961
