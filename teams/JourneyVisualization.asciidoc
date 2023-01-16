@@ -8,8 +8,6 @@
 * acokos
 * Bene90
 
-
-
 == Repos
 * devonfw/journeys
 

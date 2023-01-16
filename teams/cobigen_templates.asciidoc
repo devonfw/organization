@@ -9,11 +9,13 @@
 * AnnaOsipjan 
 * quantumfate
 * ZakariaeMkassi
-* morsymegahed
 * NelsonNew
 * Ali7223
 * Zylesto
 * KHucklenbroich
+* lur1an
+* sarahffm
+* cedricarnauld123
 
 == Repos
 * devonfw/cobigen
