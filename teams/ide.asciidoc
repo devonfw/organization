@@ -11,6 +11,8 @@
 * mustafaokyay
 * hohwille
 * alfeilex
+* Leosssss
+* MoritzLanger
 
 == Repos
 * devonfw/ide
