@@ -13,6 +13,7 @@
 * alfeilex
 * Leosssss
 * MoritzLanger
+* dendmicap
 
 == Repos
 * devonfw/ide
